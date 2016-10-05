@@ -31,143 +31,143 @@ import javax.imageio.ImageIO;
  */
 public class PhotoComponent extends JComponent implements MouseListener, MouseMotionListener, KeyListener{
 
-    public static boolean flipped;
-    private BufferedImage image;
-    private boolean drawingMode = false;
-    private boolean textMode = false;
+public static boolean flipped;
+private BufferedImage image;
+private boolean drawingMode = false;
+private boolean textMode = false;
 
 
 
-    private int prevX, prevY;     // The previous location of the mouse.
+private int prevX, prevY;     // The previous location of the mouse.
 
-//public Graphics2D graphicsForDrawing;
+//public Graphics2D graphicsForDrawing; 
 
-    ArrayList<ArrayList<ArrayList<Integer>>> drawingLines = new ArrayList(); //drawing lines is a list of eachLine's
-    ArrayList<ArrayList<Integer>> eachLine = new ArrayList();
+ArrayList<ArrayList<ArrayList<Integer>>> drawingLines = new ArrayList(); //drawing lines is a list of eachLine's
+ArrayList<ArrayList<Integer>> eachLine = new ArrayList(); 
 
-    ArrayList<Integer[]> rects = new ArrayList();
-    ArrayList<String> postItTexts = new ArrayList();
+ArrayList<Integer[]> rects = new ArrayList();
+ArrayList<String> postItTexts = new ArrayList();
 
-    private int boundLeft;
-    private int boundTop;
-    private int boundRight;
-    private int boundBottom;
+private int boundLeft;
+private int boundTop;
+private int boundRight;
+private int boundBottom;
 
-    private int rectX,rectY, rectXEnd, rectYEnd;
-    private StringBuffer currentPostItText;
-    private int charInputX, charInputY;
+private int rectX,rectY, rectXEnd, rectYEnd;
+private StringBuffer currentPostItText;
+private int charInputX, charInputY;
 
-    private boolean isDrawing = false;
-    private boolean newline = true;
+private boolean isDrawing = false;
+private boolean newline = true;
 
-    private boolean textRectAssociationPending = false;
-
-
-    //constructor
-    public PhotoComponent()
-    {
-        //call superclass constructor
-        super();
-
-        flipped = false;
-        setPreferredSize( new Dimension( 500, 350 ) );
-        setBackground(Color.black);
-
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        addKeyListener(this);
-
-        //read default image in
-        loadPhoto(new File(Constants.PATH_TO_FILE));
+private boolean textRectAssociationPending = false;
 
 
-    }
+//constructor
+public PhotoComponent()
+{ 
+    //call superclass constructor
+    super();
+    
+    flipped = false;
+    setPreferredSize( new Dimension( 500, 350 ) );
+    setBackground(Color.black);
+    
+    addMouseListener(this);
+    addMouseMotionListener(this);
+    addKeyListener(this);
+    
+    //read default image in
+    loadPhoto(new File("/Users/tararamanan/Downloads/kis.png"));
+    
+    
+}
 
-    public void paintComponent(Graphics g)
-    {
-        super.paintComponent(g); //is this needed?
-        g.setColor(Color.black);
-        //render image
+public void paintComponent(Graphics g)
+{
+    super.paintComponent(g); //is this needed?
+    g.setColor(Color.black);
+    //render image
         //check if state is flipped or not
 
-        if(flipped == true)
-        {
-            //draw white image
-            int imageWidth = image.getWidth();
-            int imageHeight = image.getHeight();
-            int imageX = image.getMinX();
-            int imageY = image.getMinY();
-            g.setColor(Color.yellow);
-            g.fillRect(imageX, imageY, imageWidth, imageHeight);
-
-            boundLeft = imageX;
-            boundRight = imageX + imageWidth;
-            boundTop = imageY;
-            boundBottom = imageY+imageHeight;
-
-            //draw any old annotations/drawings
-            redrawStoredDrawings(g);
-
-            //draw any old postits?
-            redrawStoredText(g);
-        }
-        else
-        {
-            g.drawImage(image, 0, 0, null);
-        }
-
-
-    }
-
-    public void loadPhoto(File filename)
+    if(flipped == true)
     {
-        try {
-            image = ImageIO.read(filename);
-        } catch (IOException ex) {
+        //draw white image
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+        int imageX = image.getMinX();
+        int imageY = image.getMinY();
+        g.setColor(Color.yellow);
+        g.fillRect(imageX, imageY, imageWidth, imageHeight);
+        
+        boundLeft = imageX;
+        boundRight = imageX + imageWidth;
+        boundTop = imageY;
+        boundBottom = imageY+imageHeight;
+           
+        //draw any old annotations/drawings
+        redrawStoredDrawings(g);
+        
+        //draw any old postits?
+        redrawStoredText(g);
+    }
+    else
+    {
+        g.drawImage(image, 0, 0, null);
+    }
+  
+    
+}
+
+public void loadPhoto(File filename)
+{
+    try {                
+          image = ImageIO.read(filename);
+       } catch (IOException ex) {
             System.out.println("Error while trying to read in image!");
-        }
-        repaint();
-    }
+       }
+    repaint();
+}
 
-    public void mouseClicked(MouseEvent event)
+public void mouseClicked(MouseEvent event)
+{
+  if (event.getClickCount() == 2) {
+    System.out.println("double clicked");
+  }
+}
+
+public void flip()
+{
+    if(flipped) //back is shown
     {
-        if (event.getClickCount() == 2) {
-            System.out.println("double clicked");
-        }
+        flipped = false;
+        //add the last string in
+        //postItTexts.add(currentPostItText.toString());
+        currentPostItText = new StringBuffer("");
+        //System.out.println("adding to postits in flip");
+        
     }
+    else
+        flipped = true;
+    repaint();
+}
 
-    public void flip()
-    {
-        if(flipped) //back is shown
-        {
-            flipped = false;
-            //add the last string in
-            //postItTexts.add(currentPostItText.toString());
-            currentPostItText = new StringBuffer("");
-            //System.out.println("adding to postits in flip");
-
-        }
-        else
-            flipped = true;
-        repaint();
-    }
-
-    private void redrawStoredDrawings(Graphics graphics)
+    private void redrawStoredDrawings(Graphics graphics) 
     {
         setupDrawingGraphics(graphics);
         graphics.setColor(Color.black);
-//        graphics.drawLine(65, 40, 65, 90);
+
         int pX=0, pY=0;
         boolean isFirstElem;
-        for(ArrayList<ArrayList<Integer>> innerList : drawingLines)
+        for(ArrayList<ArrayList<Integer>> innerList : drawingLines) 
         {
             System.out.println("line drawn" + innerList.toString());
             isFirstElem = true;
-            for(ArrayList<Integer> numberCoord : innerList)
+            for(ArrayList<Integer> numberCoord : innerList) 
             {
                 //for first element just set the prev vals n continue
                 if(isFirstElem)
-                {
+                { 
                     pX = numberCoord.get(0);
                     pY = numberCoord.get(1);
                     isFirstElem = false;
@@ -178,7 +178,7 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
                     graphics.drawLine(pX,pY,numberCoord.get(0),numberCoord.get(1));
                     pX = numberCoord.get(0);
                     pY = numberCoord.get(1);
-
+                    
                 }
             }
         }
@@ -186,12 +186,12 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
         //graphics = null;
     }
 
-    private void redrawStoredText(Graphics graphicsForDrawing)
+    private void redrawStoredText(Graphics graphicsForDrawing) 
     {
-
+        
         System.out.println(rects.toString());
         System.out.println(postItTexts.toString());
-
+        
         for(int i =0; i<rects.size(); i++)
         {
             //Graphics2D graphicsForDrawing = (Graphics2D) getGraphics();
@@ -200,27 +200,27 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
             System.out.println("this ran atleast ");
             graphicsForDrawing.setColor(Color.green);
             graphicsForDrawing.fillRect(coord[0], coord[1], coord[2]-coord[0], coord[3]-coord[1]);
-
-            //graphicsForDrawing.dispose();
-            //graphicsForDrawing = null;
+            
+             //graphicsForDrawing.dispose();
+             //graphicsForDrawing = null;
             //graphicsForDrawing.setColor(Color.black);
-
+            
             charInputX = coord[0];
             charInputY = coord[1];
             newline = true;
-
+            
             for(char c: text.toCharArray())
             {
                 writeTextInRect(graphicsForDrawing, c,coord);
             }
         }
+        
+       
 
-
-
-
+        
     }
-
-
+    
+ 
     public void mousePressed(MouseEvent e)
     {
         int x = e.getX();
@@ -228,7 +228,7 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
 
         prevX = x;
         prevY = y;
-
+        
         //setup drawing graphics
         setupDrawingGraphics(getGraphics());
 
@@ -240,42 +240,42 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
             tempList.add(y);
 
         }
-
+        
         if(textMode)
         {
-            rectX = x;
-            rectY = y;
+           rectX = x;
+           rectY = y;
         }
         //append prev text to string--trying out!
         if(currentPostItText != null)// & !(currentPostItText.toString().equals("")))
         {
             //if(currentPostItText.toString().equals(""))
             //{
-            //check if an association is pending with a rect if yes:
-            if(textRectAssociationPending)
-            {
-                postItTexts.add(currentPostItText.toString()); //exception!
-                //System.out.println("adding to post it in mouse released");
-                textRectAssociationPending = false;
-            }
+                //check if an association is pending with a rect if yes:
+                if(textRectAssociationPending)
+                {
+                    postItTexts.add(currentPostItText.toString()); //exception!
+                    //System.out.println("adding to post it in mouse released");
+                    textRectAssociationPending = false;
+                }
             //}
         }
 
     }
-
+    
     public void mouseDragged(MouseEvent e)
     {
         isDrawing = true;
         int x = e.getX();
         int y = e.getY();
-
+        
         Graphics graphics = getGraphics();
 
         if(drawingMode)
         {
             if(Math.abs(x-prevX)>0 || Math.abs(y-prevY)>0)
             {
-
+                graphics.setColor(Color.black);
                 if(x<= boundRight && x >= boundLeft && y>= boundTop && y<= boundBottom)
                     graphics.drawLine(prevX, prevY, x, y);
 
@@ -290,7 +290,7 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
             prevX = x;
             prevY = y;
         }
-
+        
         if(textMode)
         {
             //clear previous rectangle
@@ -301,7 +301,7 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
                     x = prevX;
                 if(y<prevY)
                     y = prevY;
-
+                graphics.setColor(Color.green);
                 graphics.fillRect(rectX, rectY, x-rectX, y-rectY);
 
                 prevX = x;
@@ -318,7 +318,7 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
         {
             //System.out.println("in released fn:Eachline = " + eachLine.toString());
 
-
+            
             if(isDrawing)
             {
                 drawingLines.add((ArrayList<ArrayList<Integer>>) eachLine.clone());
@@ -328,7 +328,7 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
             }
             //System.out.println("drawnglines = " + drawingLines.toString());
         }
-
+        
         if(textMode)
         {
             rectXEnd = prevX;
@@ -337,29 +337,29 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
             {
                 rects.add(new Integer[]{rectX, rectY, rectXEnd, rectYEnd});
                 isDrawing = false;
-
+                
                 //create stringbuffer for text
                 currentPostItText = new StringBuffer("");
                 charInputX = rectX;
                 charInputY = rectY;
 
                 newline = true;
-
+                
                 textRectAssociationPending = true;
             }
-
-
-
+            
+            
+            
         }
         //graphicsForDrawing.dispose();
         //graphicsForDrawing = null;
-
+        
         System.out.println("post it text = " + postItTexts.toString());
         System.out.println("rects = " + rects.size());
     }
 
-    private void setupDrawingGraphics(Graphics graphics)
-
+    private void setupDrawingGraphics(Graphics graphics) 
+    
     {
         graphics = (Graphics2D) getGraphics();
         if(drawingMode)
@@ -367,7 +367,7 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
         if(textMode)
             graphics.setColor(Color.green);
     }
-
+    
     private void writeTextInRect(Graphics graphics, char inputChar, Integer[] lastRectDim)
     {
         //Integer[] lastRectDim = rects.get(rects.size()-1);
@@ -375,25 +375,24 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
         int y1 = lastRectDim[1];
         int x2 = lastRectDim[2];
         int y2 = lastRectDim[3];
-
-        graphics = (Graphics2D) getGraphics();
+        
         graphics.setColor(Color.black);
-
+        
         FontMetrics metrics = graphics.getFontMetrics();
         int fontHeight = metrics.getMaxAscent();
         int fontLeading = metrics.getLeading();
         int fontDescent = metrics.getMaxDescent();
         int charWidth = metrics.charWidth(inputChar);
-
+        
         //System.out.println("charInputY")
-
+        
         if(newline) //to start, check if newline is true and reposition
         {
             charInputX = x1 + 3;
             charInputY = charInputY + fontHeight + fontLeading+fontDescent;
-
+            
             if(charInputY + fontDescent + fontLeading > y2)
-            {
+            {   
                 if(charInputY + fontDescent+fontLeading<=boundBottom)
                 {
                     //increasePostItHeight(x1,y2,x2,y2+3+maxascent+maxdescent
@@ -408,23 +407,23 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
             }
             newline = false;
         }
-
+        
         //output the character
         graphics.setColor(Color.black);
         if(charInputY+fontDescent<=boundBottom)
             graphics.drawString(String.valueOf(inputChar) , charInputX, charInputY);
-
+        
         //set position for next input character
         charInputX = charInputX + charWidth;
-
-
+        
+        
         //see where next input char will go. if it is too close to the edge, set newline to true
         if(charInputX+charWidth>=x2)
             newline = true;
-
+        
         //graphicsForDrawing.dispose();
         //graphicsForDrawing = null;
-
+        
     }
 
     @Override
@@ -442,14 +441,14 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
         return;
     }
 
-    void setDrawingMode(boolean b)
+    void setDrawingMode(boolean b) 
     {
         drawingMode = b;
         textMode = !b;
         this.setFocusable(false);
     }
-
-    void setTextMode(boolean b)
+    
+    void setTextMode(boolean b) 
     {
         textMode = b;
         drawingMode = !b;
@@ -462,10 +461,10 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
         char lastChar = e.getKeyChar();
         currentPostItText.append(lastChar);
         //System.out.println("typed: " + lastChar);
-
+        
         writeTextInRect(getGraphics(), lastChar,rects.get(rects.size()-1));
-
-
+        
+        
     }
 
     @Override
@@ -477,7 +476,10 @@ public class PhotoComponent extends JComponent implements MouseListener, MouseMo
     public void keyReleased(KeyEvent e) {
         //System.out.println("blah");
     }
-
+    
 
 
 }
+
+
+
