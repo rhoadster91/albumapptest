@@ -14,9 +14,11 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -35,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.ViewportLayout;
 
 
 public class AlbumAppManager
@@ -137,25 +140,26 @@ public class AlbumAppManager
     {
         //photocomp - photoSCrollPane - photoPanel
         photoComp = new PhotoComponent();
-        photoComp.setPreferredSize( new Dimension( 500, 350 ) );
+//        photoComp.setPreferredSize( new Dimension( 500, 350 ) );
         photoComp.setBackground(Color.red);
         photoComp.setVisible(true);
 
         //fix this scrollbar stuff later!!!
         JScrollPane photoScrollPane = new JScrollPane();
         photoScrollPane.setBackground(Color.black);
-        photoScrollPane.add(photoComp);
-        photoScrollPane.setViewportView(photoComp);
+        photoScrollPane.add(photoPanel);
+        photoScrollPane.setViewportView(photoPanel);
 
 
-        photoScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        photoScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        photoScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        photoScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         photoPanel.setBackground(Color.gray);
-        photoPanel.add(photoScrollPane);
+        photoPanel.setLayout(new BorderLayout());
+        photoPanel.add(photoComp, BorderLayout.WEST);
 
-        pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));
-        pane.add(photoPanel, BorderLayout.CENTER);
+        pane.setLayout(new BorderLayout());
+        pane.add(photoScrollPane);
     }
 
 
