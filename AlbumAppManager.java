@@ -37,35 +37,35 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 
-public class AlbumAppNew1
+public class AlbumAppManager
 {
 
     //field declarations
-    private static JMenuBar mainMenu;
-    private static JMenu fileMenu;
-    private static JMenuItem importOpt;
-    private static JMenuItem deleteOpt;
-    private static JMenuItem exitOpt;
-    private static JMenu viewMenu;
-    private static JRadioButtonMenuItem photoViewOpt;
-    private static JRadioButtonMenuItem gridViewOpt;
-    private static JRadioButtonMenuItem splitViewOpt;
-    private static ButtonGroup buttonMenuGroup;
-    private static JPanel photoPanel;
-    private static JPanel workPane;
-    private static JLabel descLabel;
-    private static JCheckBox vacationBox;
-    private static JCheckBox familyBox;
-    private static JCheckBox schoolBox;
-    private static JCheckBox workBox;
-    private static JRadioButtonMenuItem drawModeRadio;
-    private static JRadioButtonMenuItem textModeRadio;
-    private static JButton prevButton;
-    private static JButton nextButton;
+    private JMenuBar mainMenu;
+    private JMenu fileMenu;
+    private JMenuItem importOpt;
+    private JMenuItem deleteOpt;
+    private JMenuItem exitOpt;
+    private JMenu viewMenu;
+    private JRadioButtonMenuItem photoViewOpt;
+    private JRadioButtonMenuItem gridViewOpt;
+    private JRadioButtonMenuItem splitViewOpt;
+    private ButtonGroup buttonMenuGroup;
+    private JPanel photoPanel;
+    private JPanel workPane;
+    private JLabel descLabel;
+    private JCheckBox vacationBox;
+    private JCheckBox familyBox;
+    private JCheckBox schoolBox;
+    private JCheckBox workBox;
+    private JRadioButtonMenuItem drawModeRadio;
+    private JRadioButtonMenuItem textModeRadio;
+    private JButton prevButton;
+    private JButton nextButton;
 
-    private static PhotoComponent photoComp;
+    private PhotoComponent photoComp;
 
-    public static void addComponentsToPane(Container pane)  //top level layout
+    public void addComponentsToPane(Container pane)  //top level layout
     {
 
         pane.setPreferredSize( new Dimension( 640, 480 ) );
@@ -133,7 +133,7 @@ public class AlbumAppNew1
     }
 
 
-    public static void addComponentsToWorkPane(Container pane) //work area where the photoPanel will go
+    public void addComponentsToWorkPane(Container pane) //work area where the photoPanel will go
     {
         //photocomp - photoSCrollPane - photoPanel
         photoComp = new PhotoComponent();
@@ -159,7 +159,7 @@ public class AlbumAppNew1
     }
 
 
-    private static void initBasicComponents(JFrame frame)
+    private void initBasicComponents(JFrame frame)
     {
         //create objects for blank declarations
         mainMenu = new javax.swing.JMenuBar();
@@ -207,7 +207,7 @@ public class AlbumAppNew1
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    private  static void createAndShowGUI()
+    public void createAndShowGUI()
     {
 
         //Create and set up the window.
@@ -227,19 +227,7 @@ public class AlbumAppNew1
         addActionListeners(frame);
     }
 
-    public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-
-            }
-        });
-    }
-
-
-    public static void addActionListeners(final JFrame frame)         //Method for handling all action listener call backs
+    public void addActionListeners(final JFrame frame)         //Method for handling all action listener call backs
     {
 
         textModeRadio.addActionListener(new ActionListener() {
